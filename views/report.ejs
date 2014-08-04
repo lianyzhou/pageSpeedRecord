@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="/resources/bower_components/bootstrap/dist/css/bootstrap.css"/>
+	</head>
+	<body>
+		<div class="col-md-12">
+			<h1 class="text-success text-center">项目使用SeaJS后页面加载100次花费时间报告</h1>
+			<%for(var i = 0 , len = list.length ; i < len ; i++) {%>
+				<div class="col-md-4">
+					<h4 class="text-primary"><%=list[i].title%></h4>
+					<p class="text-danger">平均时间：<%=list[i].avg%>ms</p>
+					<table class="table table-bordered table-condensed">
+						<thead>
+							<tr>
+								<th>序号（第几次）</th>
+								<th>加载时间(毫秒)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%for(var j = 0 , jLen = list[i].series.length ; j < jLen ; j++) { %>
+							<tr>
+								<td><%=j + 1%></td>
+								<td><%=list[i].series[j]%></td>
+							</tr>
+							<%}%>
+						</tbody>
+					</table>
+				</div>
+			<%}%>
+		</div>
+		<script src="/resources/bower_components/jquery/jquery.js"></script>
+		<script>
+			(function() {
+				$.get('/log/result',function(arr) {
+					var $result = $('#result');
+					var sum = 0;
+					for(var i = 0 , len = arr.length ; i < len ; i++) {
+						sum += arr[i];
+					}
+					var avg = Math.round(sum / arr.length);
+					$result.append(arr.length + " 次加载页面 ， 平均时间 " + avg + " ms<br />");
+					for(var i = 0 , len = arr.length ; i < len ; i++) {
+						$result.append((i+1) + " 加载花费时间 " + arr[i] + " ms<br />");
+					}
+				},{},"json");
+			})();
+		</script>
+	</body>
+</html>
